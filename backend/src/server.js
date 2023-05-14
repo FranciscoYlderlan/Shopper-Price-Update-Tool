@@ -1,7 +1,7 @@
 import 'express-async-errors';
 import express from 'express';
 import { routes } from './routes/index.js';
-import { ensureAlertAsyncErrors } from './middleware/ensureAlertAsyncError.js';
+import { ensureAlertAsyncErrors } from './middleware/ensureAlertAsyncErrors.js';
 import { sqliteConnection } from './database/sqlite/index.js';
 
 const PORT = 8000;
