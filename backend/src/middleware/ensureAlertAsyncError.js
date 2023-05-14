@@ -1,6 +1,6 @@
 import { AppError } from '../utils/AppError.js';
 
-export function ensureAlertAsyncError(error, request, response, next) {
+export function ensureAlertAsyncErrors(error, request, response, next) {
     const clientError = error instanceof AppError;
 
     if (clientError) {
