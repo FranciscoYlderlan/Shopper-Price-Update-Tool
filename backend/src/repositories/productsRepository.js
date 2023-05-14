@@ -15,6 +15,10 @@ export class ProductsRepository {
         const products = await this.Products().where({ code: id }).first();
         return products;
     }
+    async isPack(pack_id) {
+        const pack = await this.Packs().where({ pack_id }).first();
+        return pack;
+    }
 
     async findAllProductsToUpdate() {
         return this.Products()

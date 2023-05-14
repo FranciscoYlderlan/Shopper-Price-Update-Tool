@@ -25,9 +25,10 @@ export async function ensureValidations(request, response, next) {
     let data = {};
 
     let products = [];
+
+    let invalidProducts = {};
     const missingFields = [];
     const invalidFormatPrices = [];
-    let invalidStandardization = {};
 
     await fs
         .createReadStream(filepath)
@@ -36,6 +37,7 @@ export async function ensureValidations(request, response, next) {
             const product = {
                 product_code,
                 new_price,
+                error_log: [],
             };
 
             if (!validateFields({ product_code, new_price })) {
@@ -49,12 +51,15 @@ export async function ensureValidations(request, response, next) {
             products = [...products, product];
         })
         .on('end', () => {
-            invalidStandardization = {
+            invalidProducts = {
                 missingFields,
                 invalidFormatPrices,
             };
-            data = { products, invalidStandardization };
-            request.body.products = data;
+
+            data = { products, invalidProducts };
+
+            request.file.data = data;
+
             next();
         });
 }
