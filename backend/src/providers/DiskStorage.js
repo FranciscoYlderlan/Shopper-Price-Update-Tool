@@ -3,10 +3,10 @@ import path from 'path';
 import fs from 'fs';
 
 export class DiskStorage {
-
     async saveFile(filename) {}
     async deleteFile(filename) {
-        filepath = path.resolve(uploadsConfig.TMP_FOLDER, filename);
+        const filepath = path.resolve(uploadsConfig.TMP_FOLDER, filename);
+
         try {
             await fs.promises.stat(filepath);
         } catch (error) {

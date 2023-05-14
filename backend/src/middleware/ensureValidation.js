@@ -26,10 +26,6 @@ export async function ensureValidations(request, response, next) {
 
     let products = [];
 
-    let invalidProducts = {};
-    const missingFields = [];
-    const invalidFormatPrices = [];
-
     await fs
         .createReadStream(filepath)
         .pipe(csvParser())
@@ -41,24 +37,17 @@ export async function ensureValidations(request, response, next) {
             };
 
             if (!validateFields({ product_code, new_price })) {
-                missingFields.push(product_code);
+                product.error_log.push(`Campos obrigatórios ausentes para o produto.`);
             }
 
             if (!validatePrices(new_price)) {
-                invalidFormatPrices.push(product_code);
+                product.error_log.push(`Valor inválido para o preço do produto.`);
             }
 
             products = [...products, product];
         })
         .on('end', () => {
-            invalidProducts = {
-                missingFields,
-                invalidFormatPrices,
-            };
-
-            data = { products, invalidProducts };
-
-            request.file.data = data;
+            request.file.data = products;
 
             next();
         });
