@@ -1,7 +1,7 @@
 import knex from '../database/knex/index.js';
-import { knex as knexLib } from 'knex';
+import sql from 'knex';
 
-export class ProductsRepository {
+export class ProductRepository {
     constructor() {
         this.Products = () => knex('products');
         this.Packs = () => knex('packs');
@@ -25,6 +25,7 @@ export class ProductsRepository {
         return this.Products().innerJoin('packs', function () {
             this.on('code', 'packs.product_id').orOn('code', 'packs.pack_id');
         });
+        // .distinct('code');
     }
 
     async findProductsByIdToUpdate(id) {
@@ -38,7 +39,7 @@ export class ProductsRepository {
 
     async findAllComponentsSellingPricesByPack(pack_id) {
         const componentsSellingPrices = await this.Products()
-            .select(knexLib.raw('qty * price_sales as SellingPrices'))
+            .select(sql.raw('qty * price_sales as SellingPrices'))
             .innerJoin('packs', function () {
                 this.on('code', 'packs.product_id').andOn('product_id', pack_id);
             });

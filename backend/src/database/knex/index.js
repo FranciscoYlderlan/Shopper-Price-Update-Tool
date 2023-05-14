@@ -1,12 +1,6 @@
-import sqlite3 from 'sqlite3';
-import * as sqlite from 'sqlite';
-import Path from '../../utils/Path.js';
-import path from 'path';
+import config from '../../../knexfile.js';
+import knex from 'knex';
 
-export async function sqliteConnection() {
-    const database = await sqlite.open({
-        filename: path.resolve(Path.dirname(import.meta.url), '..', 'database.db'),
-        driver: sqlite3.Database,
-    });
-    return database;
-}
+const connection = knex(config.development);
+
+export default connection;
