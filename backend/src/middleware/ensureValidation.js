@@ -5,15 +5,29 @@ import fs from 'fs';
 import path from 'path';
 import upload from '../configs/upload.js';
 
+// Função para validar se os campos product_code e new_price foram preenchidos
+function validateFields({ product_code, new_price }) {
+    return product_code && new_price;
+}
+
+// Função para validar se o preço é numérico
+function validatePrices(new_price) {
+    //products.every(product => !isNaN(parseFloat(product.newPrice)));
+
+    return !isNaN(parseFloat(new_price));
+}
+
 export async function ensureValidations(request, response, next) {
     const filename = request.file.filename;
 
     const filepath = path.resolve(upload.TMP_FOLDER, filename);
 
-    const products = [];
+    let data = {};
+
+    let products = [];
     const missingFields = [];
-    const invalidProductCodes = [];
-    const violatedRules = [];
+    const invalidFormatPrices = [];
+    let invalidStandardization = {};
 
     await fs
         .createReadStream(filepath)
@@ -23,17 +37,24 @@ export async function ensureValidations(request, response, next) {
                 product_code,
                 new_price,
             };
-            const invalidFields = !product_code || !new_price;
 
-            if (invalidFields) {
+            if (!validateFields({ product_code, new_price })) {
                 missingFields.push(product_code);
+            }
+
+            if (!validatePrices(new_price)) {
+                invalidFormatPrices.push(product_code);
             }
 
             products = [...products, product];
         })
         .on('end', () => {
-            console.log(products);
+            invalidStandardization = {
+                missingFields,
+                invalidFormatPrices,
+            };
+            data = { products, invalidStandardization };
+            request.body.products = data;
+            next();
         });
-
-    next();
 }
