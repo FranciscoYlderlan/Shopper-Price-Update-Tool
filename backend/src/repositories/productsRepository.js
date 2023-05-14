@@ -1,4 +1,5 @@
 import knex from '../database/knex/index.js';
+import { knex as knexLib } from 'knex';
 
 export class ProductsRepository {
     constructor() {
@@ -21,11 +22,9 @@ export class ProductsRepository {
     }
 
     async findAllProductsToUpdate() {
-        return this.Products()
-            .select('products.*')
-            .innerJoin('packs', function () {
-                this.on('code', 'packs.product_id').orOn('code', 'packs.pack_id');
-            });
+        return this.Products().innerJoin('packs', function () {
+            this.on('code', 'packs.product_id').orOn('code', 'packs.pack_id');
+        });
     }
 
     async findProductsByIdToUpdate(id) {
@@ -33,10 +32,19 @@ export class ProductsRepository {
         return products;
     }
     async findAllComponentsByPack(pack_id) {
-        const components = await this.Packs()
-            .select('product_id')
-            .where({ pack_id })
-            .innerJoin('packs', 'code', 'packs.pack_id');
+        const components = await this.Packs().select('product_id').where({ pack_id });
         return components;
     }
+
+    async findAllComponentsSellingPricesByPack(pack_id) {
+        const componentsSellingPrices = await this.Products()
+            .select(knexLib.raw('qty * price_sales as SellingPrices'))
+            .innerJoin('packs', function () {
+                this.on('code', 'packs.product_id').andOn('product_id', pack_id);
+            });
+        return componentsSellingPrices;
+    }
 }
+//seleciona todas infos dos componentes de um produto pack.
+//multiplica product_sales por qty
+//o resultado deverá ser igual a do pack new_price

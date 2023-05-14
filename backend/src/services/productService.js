@@ -12,6 +12,8 @@ export class ProductService {
     //código dos produtos com reajuste superior a +/- 10% do preço atual
     violatedRulePriceMaxAllowedDifference = [];
 
+    // componentes estão contidos no arquivo de precificação mas a soma não bate o valor total do pack.
+
     constructor(repository) {
         this.repository = repository;
     }
@@ -66,17 +68,18 @@ export class ProductService {
             const isTypePack = await this.repository.isPack(product_code);
 
             if (isTypePack) {
-                // Regra: Componentes que compõem um pacote adicionado para atualização devem
-                //estar contidos no arquivos de precificação
+                //Regra: Componentes que compõem um pacote, adicionado no arquivo de precificação
+                //para atualização, devem estar contidos no arquivos de precificação.
                 const components = await this.repository.findAllComponentsByPack(product_code);
-                const missingComponents = components.map(row => {
-                    if (!existingCodesProductsFile.has(row.code)) {
-                        return row.code;
+                const missingComponents = components.map(code => {
+                    if (!existingCodesProductsFile.has(code)) {
+                        return code;
                     }
                 });
                 const hasMissingComponents = missingComponents.length > 0;
                 if (hasMissingComponents) {
                     this.violatedRuleComponentsPack.push(product_code);
+                } else {
                 }
             }
         });
