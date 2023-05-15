@@ -11,6 +11,7 @@ export default createGlobalStyle`
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
+        width: 90%;
     }
 
     :root {
@@ -25,8 +26,9 @@ export default createGlobalStyle`
         font-family: 'Roboto', sans-serif;    
         background:  rgba(230,230,230,1);
         display: grid;
-        place-items: center;
-        align-content: space-around;    
+        justify-items: center;
+        align-content: stretch;
+        align-items: start;
         height: 100vh;
         width: 100vw;
     }

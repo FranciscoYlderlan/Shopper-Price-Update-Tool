@@ -1,11 +1,10 @@
 import { Container } from "./styles";
 
-export function Card() {
+export function Card({children}) {
     
     return (
         <Container>
-            <h1>Pack update tools</h1>
-            
+            {children}
         </Container>
     );
 }
