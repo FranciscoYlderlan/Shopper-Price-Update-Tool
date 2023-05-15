@@ -11,6 +11,7 @@ export const Container = styled.main`
         .col-2 {
             display: flex;
             gap: 2rem;
+            width: 90%;
             button + button {
                 background-color: ${({ theme }) => theme.COLORS.GREEN_100};
             }
@@ -19,7 +20,7 @@ export const Container = styled.main`
             }
         }
     }
-    &:last-child {
+    .TableView {
         display: grid;
         place-items: center;
     }

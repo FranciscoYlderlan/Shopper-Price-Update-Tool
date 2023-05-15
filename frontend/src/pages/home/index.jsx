@@ -54,7 +54,7 @@ export function Home() {
                 </div>
             </Card> 
 
-            <Card>
+            <Card className="tableView">
             {
                 products.length && 
                 <DataTable data={products}/>

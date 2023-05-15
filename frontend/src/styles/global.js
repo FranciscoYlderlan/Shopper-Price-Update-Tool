@@ -4,16 +4,17 @@ export default createGlobalStyle`
     
     
     
-    * {
+     * {
         padding: 0;
         margin: 0;
         box-sizing: border-box;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
+    }
+    #root {
         width: 90%;
     }
-
     :root {
         font-size: 62.5%;
     }
@@ -34,7 +35,18 @@ export default createGlobalStyle`
         height: 100vh;
         width: 100vw;
     }
+    .css-12u49z-MuiDataGrid-root .MuiDataGrid-cell--textLeft{
+        justify-content: center !important;
+        font-size: 1.2rem !important;
 
+    }
+    .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar {
+        font-size: 1.2rem !important;
+    }
+   .MuiDataGrid-columnHeaderTitleContainer{
+        justify-content: center !important;
+        font-size: 1.2rem !important;
+    }
     span, li, p {
         font-family: 'Roboto', sans-serif;
     }
@@ -92,6 +104,6 @@ export default createGlobalStyle`
     .content:hover {
         -webkit-mask-position: left top;
         cursor: pointer;
-    }
+    } 
 
 `;
