@@ -2,6 +2,8 @@ import { Container } from "./styles";
 import { Card } from "../../components/Card";
 import { DragDrop } from "../../components/DragDrop";
 import {Button} from "../../components/Button"
+import { DataTable }  from "../../components/DataTable";
+
 import { useState } from "react";
 import {read, utils} from "xlsx";
 
@@ -34,9 +36,6 @@ export function Home() {
         setPricingFile(filePreview)
 
         handleViewFile(file)
-
-        
-
     }
 
     function handleValidateFile() {
@@ -58,9 +57,7 @@ export function Home() {
             <Card>
             {
                 products.length && 
-                products.map((product, index) => {
-                    return <p key={index}> {product.product_code}</p>
-                })  
+                <DataTable data={products}/>
             }
             </Card> 
         </Container>

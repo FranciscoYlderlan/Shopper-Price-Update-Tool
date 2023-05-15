@@ -21,7 +21,9 @@ export default createGlobalStyle`
     button{
         font-size: 1.6rem;
     }
-
+    Datatable {
+        font-size: 1.6rem;
+    }
     body {
         font-family: 'Roboto', sans-serif;    
         background:  rgba(230,230,230,1);

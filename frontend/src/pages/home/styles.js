@@ -19,4 +19,8 @@ export const Container = styled.main`
             }
         }
     }
+    &:last-child {
+        display: grid;
+        place-items: center;
+    }
 `;
