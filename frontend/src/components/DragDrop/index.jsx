@@ -14,7 +14,9 @@ export function DragDrop({onFileChange}) {
 
     function handleFileDrop(e) {
         const pricingFile = e.target.files[0];
+        
         if(pricingFile) {
+            console.log(pricingFile)
             if(pricingFile.name.toLowerCase().endsWith('.csv')){
                 setFilename(pricingFile);
                 onFileChange(pricingFile);

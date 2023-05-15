@@ -19,7 +19,7 @@ function validatePrices(new_price) {
 
 export async function ensureValidations(request, response, next) {
     const filename = request.file.filename;
-
+    console.log(filename);
     const filepath = path.resolve(upload.TMP_FOLDER, filename);
 
     let data = {};

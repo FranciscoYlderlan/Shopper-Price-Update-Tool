@@ -43,9 +43,11 @@ export default createGlobalStyle`
     .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar {
         font-size: 1.2rem !important;
     }
-   .MuiDataGrid-columnHeaderTitleContainer{
+   .MuiDataGrid-columnHeaderTitleContainer, 
+   .css-1iyq7zh-MuiDataGrid-columnHeaders{
         justify-content: center !important;
         font-size: 1.2rem !important;
+        background-color: ${({ theme }) => theme.COLORS.ZINC} !important;
     }
     span, li, p {
         font-family: 'Roboto', sans-serif;
