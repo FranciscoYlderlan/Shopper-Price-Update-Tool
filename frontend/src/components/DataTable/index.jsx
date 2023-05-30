@@ -1,26 +1,62 @@
-import * as React from 'react';
+import { useState, useEffect }from 'react';
 import { DataGrid } from '@mui/x-data-grid/';
+import { AlertIcon } from '../AlertIcon';
+import { AlertPopover } from '../AlertPopover';
+import {GrStatusWarning, GrStatusGood} from 'react-icons/gr';
+
+
 const columns = [
   { field: 'id', headerName: 'Index', width:70},
   { field: 'product_code', headerName: 'Código do Produto', width:200 },
   { field: 'new_price', headerName: 'Novo preço', width:200 },
 ];
 
-export function DataTable({data}) {
+const columnsValidated = [
+  { field: 'id', headerName: 'Index', minWidth:70},
+  { field: 'product_code', headerName: 'Código do Produto', minWidth:150 },
+  { field: 'new_price', headerName: 'Novo preço', minWidth:150 },
+  { field: 'error_log', headerName: 'Status',  minWidth: 100,
+  description: "Para mais detalhes clique no ícone",
+  // headerAlign: "left",
+    renderCell: (params) => {
+      if(params.value) {
+        return (<GrStatusWarning size={20}  style={{ background:'#DC2626'}}/>)
+      }
+      return (<GrStatusGood size={20}  style={{ background:'#15803D'}} />) 
+
+      
+    }
+  },
+];
+
+
+export function DataTable({data, onValidate}) {
   
-  const [rows, setRows] = React.useState([]);
+  const [rows, setRows] = useState([]);
+
+  const [reload, setReload] = useState(false);
 
   function handleFormatData() {
-    const formattedData = data.map((row, index) => {
+    setReload(true);
+    const formattedData = data.map(({new_price, product_code, error_log}, index) => {
+      if(onValidate){
+        return {
+          id:index,
+          new_price,
+          product_code,
+          error_log : error_log.join(';')
+        }
+      }
       return {
         id:index,
-        ...row
+        new_price,
+        product_code,
       }
     });
-    setRows(formattedData)
+    setRows(formattedData);
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     handleFormatData();
   },[])
 
@@ -28,7 +64,7 @@ export function DataTable({data}) {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={rows}
-        columns={columns}
+        columns={onValidate? columnsValidated : columns}
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 5 },

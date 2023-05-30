@@ -10,11 +10,15 @@ import {read, utils} from "xlsx";
 
 export function Home() {
     
-    // const avatarURL =  user.avatar ? `${api.defaults.baseURL}/files/${user.avatar}`;
-    
     const [pricingFile, setPricingFile] = useState(null);
     const [products,setProducts] = useState([]);
-    const [productsValidated,setProductsValidated] = useState([]);
+
+    
+    const [onValidate, setOnValidate] = useState(false);
+    const [dropped, setDropped] = useState(false);
+
+
+    const [sumErrors,setSumErrors] = useState(1);
     
     function handleViewFile(file) {
         
@@ -25,65 +29,86 @@ export function Home() {
             if(sheets.length){
                 const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
                 setProducts(rows);
+                setDropped(true);
             };
         };
         reader.readAsArrayBuffer(file)
     };
 
     function handleAddedFile(file) {
-        
-        // const filePreview = URL.createObjectURL(file);
-        
         setPricingFile(file)
-
         handleViewFile(file)
     }
 
-    async function handleValidateFile() {
+    async function handleOnClickValidate() {
          
+        try {
+            if(pricingFile) {
+                const fileUploadForm = new FormData();
+  
+                fileUploadForm.append('pricingFile',pricingFile);
+        
+                const response = await api.patch('/product/',fileUploadForm);
+                
+                const totalErrors = response.data.products.reduce(
+                    (accumulator, product) => {
+                        return accumulator + product.error_log.length;
+                    },
+                    0
+                );
+
+                setSumErrors(totalErrors);
+                setProducts(response.data.products);
+                setOnValidate(true);
+            }
+            
+        } catch (error) {
+            setOnValidate(false)
+            return alert('Ocorreu um erro ao tentar validar arquivo.');
+        }
+                   
+    }
+    async function handleOnClickUpdate() {
         try {
 
             if(pricingFile) {
                 const fileUploadForm = new FormData();
-                console.log(pricingFile);
+  
                 fileUploadForm.append('pricingFile',pricingFile);
-                console.log(fileUploadForm)
+        
                 const response = await api.patch('/product/',fileUploadForm);
-                console.log(response.data)
-                setProductsValidated(response.data.pricingFile);
+                
+                console.log("Produtos atualizados com sucesso.");
+
+                setSumErrors(1)
+                setProductsValidated([]);
             }
             
-            // localStorage.setItem('@rating-movie:user', JSON.stringify( user ));
-
-
-            return alert("Perfil de usuário atualizado com sucesso!")
-                
         } catch (error) {
-                return alert('Ocorreu um erro ao tentar validar arquivo.');
+            return alert('Ocorreu um erro ao tentar validar arquivo.');
         }
-           
-        
     }
-    
-
-
+    function hasErrors() {
+        return sumErrors > 0
+    }
 
     return (
         <Container>
             <Card>
                 <DragDrop onFileChange = {file => handleAddedFile(file)}/>
                 <div className="col-2">
-                    <Button title="Validar" onClick={handleValidateFile}/>
-                    <Button title="Atualizar"/>
+                    <Button title="Validar" onClick={handleOnClickValidate} disabled={!hasErrors()}/>
+                    <Button title="Atualizar" onClick={handleOnClickUpdate} disabled={hasErrors()}/>
                 </div>
             </Card> 
 
-            <Card className="tableView">
             {
-                products.length && 
-                <DataTable data={products}/>
-            }
-            </Card> 
+                //dropped caso queira mostrar a pré visualização
+                onValidate && 
+                <Card className="tableView">        
+                    <DataTable data={products} onValidate={onValidate}/>
+                </Card>
+            } 
         </Container>
     );
 }

@@ -12,7 +12,11 @@ export const Container = styled.button`
     border: none;
     border-radius: 0.8rem;
 
-    background-color: ${({ theme }) => theme.COLORS.BLUE};
+    background-color: ${({ theme }) => theme.COLORS.GREEN_100};
+    background-color: ${({ theme }) => theme.COLORS.GREEN_200};
+
+    background-color: ${({ theme, title }) =>
+        title == 'Validar' ? theme.COLORS.BLUE : theme.COLORS.GREEN_100};
     color: ${({ theme }) => theme.COLORS.WHITE};
 
     font-style: normal;
@@ -22,11 +26,13 @@ export const Container = styled.button`
 
     transition: all 0.3s;
 
-    &:disabled {
-        cursor: not-allowed;
-    }
     &:hover {
         cursor: pointer;
-        background-color: ${({ theme }) => theme.COLORS.BLUE_100};
+        background-color: ${({ theme, title }) =>
+            title == 'Validar' ? theme.COLORS.BLUE_100 : theme.COLORS.GREEN_200};
+    }
+    &:disabled {
+        cursor: not-allowed;
+        background-color: ${({ theme }) => theme.COLORS.ZINC_200};
     }
 `;
